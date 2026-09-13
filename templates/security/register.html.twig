@@ -1,0 +1,263 @@
+{% extends 'base.html.twig' %}
+{% block title %}Rejestracja{% endblock %}
+
+{% block body %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 620px;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, .12);
+        padding: 2rem;
+    }
+
+    .auth-title {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: .25rem;
+    }
+
+    .auth-subtitle {
+        font-size: .95rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+
+    .auth-field {
+        margin-bottom: 1rem;
+    }
+
+    .auth-field label,
+    .auth-field .form-label {
+        display: block;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: .35rem;
+    }
+
+    .auth-input {
+        border-radius: .75rem;
+        padding: .65rem .8rem;
+        border: 1px solid #d7deea;
+        background-color: #fff;
+    }
+
+    .auth-input:focus {
+        border-color: #93c5fd;
+        box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .15);
+    }
+
+    .auth-error,
+    .auth-field .invalid-feedback,
+    .auth-field .form-error-message {
+        color: #dc3545;
+        font-size: .85rem;
+        margin-top: .35rem;
+    }
+
+    .auth-error ul {
+        margin: .35rem 0 0;
+        padding-left: 1rem;
+    }
+
+    .auth-btn {
+        border-radius: .85rem;
+        font-weight: 700;
+        padding: .7rem;
+        margin-top: .25rem;
+    }
+
+    .auth-footer {
+        font-size: .9rem;
+        color: #64748b;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .auth-footer a {
+        font-weight: 600;
+    }
+
+    @media (max-width: 575px) {
+        .auth-container {
+            align-items: flex-start;
+            padding-top: 1.25rem;
+        }
+
+        .auth-card {
+            padding: 1.5rem 1.1rem;
+        }
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="mb-3">
+            <div class="auth-title"><span aria-hidden="true">📝</span> Rejestracja</div>
+            <div class="auth-subtitle">Utwórz konto, aby zarządzać rezerwacjami i autami.</div>
+        </div>
+
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger small" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        {% if registrationForm is defined %}
+            {{ form_start(registrationForm) }}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            {{ form_label(registrationForm.firstName, 'Imię') }}
+                            {{ form_widget(registrationForm.firstName, {
+                                attr: {
+                                    class: 'form-control auth-input',
+                                    placeholder: 'Podaj imię'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.firstName) }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            {{ form_label(registrationForm.lastName, 'Nazwisko') }}
+                            {{ form_widget(registrationForm.lastName, {
+                                attr: {
+                                    class: 'form-control auth-input',
+                                    placeholder: 'Podaj nazwisko'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.lastName) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    {{ form_label(registrationForm.email, 'Adres e-mail') }}
+                    {{ form_widget(registrationForm.email, {
+                        attr: {
+                            class: 'form-control auth-input',
+                            placeholder: 'twoj@email.com'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+
+                <div class="auth-field">
+                    {{ form_label(registrationForm.address, 'Adres') }}
+                    {{ form_widget(registrationForm.address, {
+                        attr: {
+                            class: 'form-control auth-input',
+                            placeholder: 'np. Warszawa, ul. Przykładowa 1'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.address) }}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            {{ form_label(registrationForm.plainPassword.first, 'Hasło') }}
+                            {{ form_widget(registrationForm.plainPassword.first, {
+                                attr: {
+                                    class: 'form-control auth-input',
+                                    placeholder: 'Podaj hasło'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            {{ form_label(registrationForm.plainPassword.second, 'Powtórz hasło') }}
+                            {{ form_widget(registrationForm.plainPassword.second, {
+                                attr: {
+                                    class: 'form-control auth-input',
+                                    placeholder: 'Powtórz hasło'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-error">
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+
+                {{ form_rest(registrationForm) }}
+
+                <button type="submit" class="btn btn-primary w-100 auth-btn">
+                    Zarejestruj się
+                </button>
+            {{ form_end(registrationForm, {'render_rest': false}) }}
+        {% else %}
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            <label for="firstName" class="form-label">Imię</label>
+                            <input type="text" name="firstName" id="firstName" class="form-control auth-input" placeholder="Podaj imię" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            <label for="lastName" class="form-label">Nazwisko</label>
+                            <input type="text" name="lastName" id="lastName" class="form-control auth-input" placeholder="Podaj nazwisko" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label for="email" class="form-label">Adres e-mail</label>
+                    <input type="email" name="email" id="email" class="form-control auth-input" placeholder="twoj@email.com" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="address" class="form-label">Adres</label>
+                    <input type="text" name="address" id="address" class="form-control auth-input" placeholder="np. Warszawa, ul. Przykładowa 1">
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            <label for="password" class="form-label">Hasło</label>
+                            <input type="password" name="password" id="password" class="form-control auth-input" placeholder="Podaj hasło" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-field">
+                            <label for="passwordRepeat" class="form-label">Powtórz hasło</label>
+                            <input type="password" name="passwordRepeat" id="passwordRepeat" class="form-control auth-input" placeholder="Powtórz hasło" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 auth-btn">
+                    Zarejestruj się
+                </button>
+            </form>
+        {% endif %}
+
+        <div class="auth-footer">
+            Masz już konto?
+            <a href="{{ path('app_login') }}">Zaloguj się</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

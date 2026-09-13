@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dodaj samochód{% endblock %}
+
+{% block body %}
+    {% include 'cars/_form.html.twig' with {
+        form: form,
+        page_title: '➕ Dodaj samochód',
+        page_subtitle: 'Dodaj nowe auto do swojej oferty. Uzupełnij dane, ustaw dostępność i dodaj zdjęcia, aby ogłoszenie było gotowe do publikacji.',
+        is_edit: false
+    } %}
+{% endblock %}

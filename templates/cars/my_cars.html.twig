@@ -1,0 +1,406 @@
+{% extends 'base.html.twig' %}
+{% block title %}Moje auta{% endblock %}
+
+{% block body %}
+<style>
+    .mycars-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #fff;
+        border-radius: 1rem;
+        padding: 1.15rem 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .mycars-hero-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: .3rem;
+    }
+
+    .mycars-hero-subtitle {
+        opacity: .82;
+        font-size: .92rem;
+    }
+
+    .mycars-card {
+        border: 0;
+        border-radius: 1rem;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        transition: transform .2s ease, box-shadow .2s ease;
+        height: 100%;
+    }
+
+    .mycars-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .mycars-media {
+        position: relative;
+        height: 150px;
+        background: #f8fafc;
+    }
+
+    .mycars-media img,
+    .mycars-no-photo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .mycars-no-photo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 500;
+    }
+
+    .mycars-price {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        background: rgba(15, 23, 42, 0.82);
+        color: #fff;
+        padding: .38rem .65rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: .76rem;
+    }
+
+    .mycars-body {
+        padding: .8rem;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 150px);
+    }
+
+    .mycars-title {
+        font-size: .98rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: .12rem;
+    }
+
+    .mycars-subtitle {
+        color: #64748b;
+        font-size: .8rem;
+        margin-bottom: .55rem;
+    }
+
+    .mycars-status {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        border-radius: 999px;
+        padding: .32rem .62rem;
+        font-size: .72rem;
+        font-weight: 700;
+        margin-bottom: .45rem;
+        width: fit-content;
+    }
+
+    .mycars-status-available {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .mycars-status-unavailable {
+        background: #e2e8f0;
+        color: #334155;
+    }
+
+    .mycars-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-bottom: .65rem;
+    }
+
+    .mycars-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .3rem .55rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+    }
+
+    .mycars-badge-warning {
+        background: #fff7ed;
+        color: #9a3412;
+        border-color: #fed7aa;
+    }
+
+    .mycars-badge-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border-color: #fecaca;
+    }
+
+    .mycars-badge-info {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+
+    .mycars-badge-neutral {
+        background: #f8fafc;
+        color: #475569;
+        border-color: #e2e8f0;
+    }
+
+    .mycars-meta {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: .45rem;
+        margin-bottom: .75rem;
+    }
+
+    .mycars-meta-box {
+        background: #f8fafc;
+        border: 1px solid #e9eef5;
+        border-radius: .65rem;
+        padding: .48rem .58rem;
+    }
+
+    .mycars-meta-label {
+        font-size: .68rem;
+        color: #64748b;
+        margin-bottom: .12rem;
+    }
+
+    .mycars-meta-value {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: .82rem;
+        word-break: break-word;
+    }
+
+    .mycars-note-box {
+        background: #f8fafc;
+        border: 1px solid #e9eef5;
+        border-radius: .65rem;
+        padding: .6rem .7rem;
+        margin-bottom: .75rem;
+    }
+
+    .mycars-note-label {
+        font-size: .68rem;
+        color: #64748b;
+        margin-bottom: .2rem;
+    }
+
+    .mycars-note-value {
+        color: #0f172a;
+        font-size: .82rem;
+        line-height: 1.35;
+    }
+
+    .mycars-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: .45rem;
+    }
+
+    .mycars-actions .btn {
+        border-radius: .65rem;
+        font-weight: 600;
+        font-size: .82rem;
+        padding: .4rem .55rem;
+        width: 100%;
+    }
+
+    .mycars-actions form {
+        margin: 0;
+    }
+
+    .mycars-empty {
+        border: 1px dashed #cbd5e1;
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 2rem 1.25rem;
+        text-align: center;
+    }
+
+    .mycars-empty-icon {
+        font-size: 2.1rem;
+        margin-bottom: .55rem;
+    }
+
+    @media (max-width: 991px) {
+        .mycars-media {
+            height: 170px;
+        }
+
+        .mycars-body {
+            height: auto;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .mycars-meta,
+        .mycars-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="mycars-hero">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <div class="mycars-hero-title">Moje auta</div>
+            <div class="mycars-hero-subtitle">
+                Zarządzaj swoimi ogłoszeniami, danymi flotowymi i kontroluj dostępność pojazdów.
+            </div>
+        </div>
+
+        <a href="{{ path('app_add_car') }}" class="btn btn-light fw-semibold">
+            ➕ Dodaj samochód
+        </a>
+    </div>
+</div>
+
+{% if cars is empty %}
+    <div class="mycars-empty">
+        <div class="mycars-empty-icon">🚗</div>
+        <div class="fw-semibold mb-1">Nie masz jeszcze dodanych aut</div>
+        <div class="text-muted small mb-3">
+            Dodaj pierwszy pojazd, aby zacząć publikować ogłoszenia i przyjmować rezerwacje.
+        </div>
+        <a href="{{ path('app_add_car') }}" class="btn btn-primary">Dodaj samochód</a>
+    </div>
+{% else %}
+    <div class="row g-3">
+        {% for car in cars %}
+            {% set img = null %}
+            {% if car.mainImage %}
+                {% set img = asset('uploads/cars/' ~ car.mainImage) %}
+            {% elseif car.images is defined and car.images|length > 0 %}
+                {% set img = asset('uploads/cars/' ~ ((car.images|first).path)) %}
+            {% elseif car.gallery is iterable and car.gallery|length > 0 %}
+                {% set img = asset('uploads/cars/' ~ (car.gallery|first)) %}
+            {% endif %}
+            {% set inspectionExpired = car.inspectionValidUntil and car.inspectionValidUntil|date('U') < "now"|date('U') %}
+            {% set insuranceExpired = car.insuranceValidUntil and car.insuranceValidUntil|date('U') < "now"|date('U') %}
+
+            <div class="col-12 col-sm-6 col-xl-4 d-flex">
+                <div class="mycars-card w-100">
+                    <div class="mycars-media">
+                        {% if img %}
+                            <img src="{{ img }}" alt="{{ car.brand }} {{ car.model }}">
+                        {% else %}
+                            <div class="mycars-no-photo">Brak zdjęcia</div>
+                        {% endif %}
+
+                        <span class="mycars-price">{{ car.pricePerDay }} zł / dzień</span>
+                    </div>
+
+                    <div class="mycars-body">
+                        <div class="mycars-title">{{ car.brand }} {{ car.model }}</div>
+                        <div class="mycars-subtitle">
+                            {{ car.year }}{% if car.location %} • {{ car.location }}{% endif %}
+                        </div>
+
+                        <span class="mycars-status {{ car.isAvailable ? 'mycars-status-available' : 'mycars-status-unavailable' }}">
+                            ● {{ car.isAvailable ? 'Dostępny' : 'Niedostępny' }}
+                        </span>
+
+                        <div class="mycars-badges">
+                            {% if car.isTemporarilyPaused() %}
+                                <span class="mycars-badge mycars-badge-warning">
+                                    ⏸ Wstrzymane do {{ car.pausedUntil|date('Y-m-d H:i') }}
+                                </span>
+                            {% endif %}
+
+                            {% if car.inspectionValidUntil %}
+                                {% if inspectionExpired %}
+                                    <span class="mycars-badge mycars-badge-danger">
+                                        ⚠ Przegląd nieważny
+                                    </span>
+                                {% else %}
+                                    <span class="mycars-badge mycars-badge-neutral">
+                                        🔧 Przegląd do {{ car.inspectionValidUntil|date('Y-m-d') }}
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if car.insuranceValidUntil %}
+                                {% if insuranceExpired %}
+                                    <span class="mycars-badge mycars-badge-danger">
+                                        ⚠ Ubezpieczenie nieważne
+                                    </span>
+                                {% else %}
+                                    <span class="mycars-badge mycars-badge-info">
+                                        🛡 Ubezpieczenie do {{ car.insuranceValidUntil|date('Y-m-d') }}
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <div class="mycars-meta">
+                            <div class="mycars-meta-box">
+                                <div class="mycars-meta-label">Numer rejestracyjny</div>
+                                <div class="mycars-meta-value">{{ car.registrationNumber }}</div>
+                            </div>
+
+                            <div class="mycars-meta-box">
+                                <div class="mycars-meta-label">Rok produkcji</div>
+                                <div class="mycars-meta-value">{{ car.year }}</div>
+                            </div>
+
+                            <div class="mycars-meta-box">
+                                <div class="mycars-meta-label">Przebieg</div>
+                                <div class="mycars-meta-value">
+                                    {{ car.mileage ? car.mileage ~ ' km' : 'Brak danych' }}
+                                </div>
+                            </div>
+
+                            <div class="mycars-meta-box">
+                                <div class="mycars-meta-label">VIN</div>
+                                <div class="mycars-meta-value">
+                                    {{ car.vin ?: 'Brak danych' }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if car.notes %}
+                            <div class="mycars-note-box">
+                                <div class="mycars-note-label">Uwagi do pojazdu</div>
+                                <div class="mycars-note-value">
+                                    {{ car.notes|length > 90 ? car.notes|slice(0, 90) ~ '…' : car.notes }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="mycars-actions mt-auto">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ path('app_car_details', {'id': car.id}) }}">
+                                Szczegóły
+                            </a>
+
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('app_car_edit', {'id': car.id}) }}">
+                                Edytuj
+                            </a>
+
+                            <form method="post"
+                                  action="{{ path('app_delete_car', {'id': car.id}) }}"
+                                  onsubmit="return confirm('Usunąć samochód?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_car_' ~ car.id) }}">
+                                <button class="btn btn-outline-danger btn-sm">Usuń</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

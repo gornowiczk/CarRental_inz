@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+{% block title %}Logowanie{% endblock %}
+
+{% block body %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        border-radius: 1.2rem;
+        background: #fff;
+        box-shadow: 0 20px 50px rgba(15,23,42,.12);
+        padding: 2rem 1.6rem;
+    }
+
+    .auth-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .auth-subtitle {
+        font-size: .9rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+
+    .auth-input {
+        border-radius: .8rem;
+        padding: .6rem .75rem;
+    }
+
+    .auth-btn {
+        border-radius: .9rem;
+        font-weight: 700;
+        padding: .6rem;
+    }
+
+    .auth-footer {
+        font-size: .85rem;
+        color: #64748b;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .auth-footer a {
+        font-weight: 600;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <div class="mb-3">
+            <div class="auth-title">🔐 Logowanie</div>
+            <div class="auth-subtitle">Zaloguj się, aby zarządzać rezerwacjami i autami</div>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger small">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="alert alert-info small">
+                Jesteś zalogowany jako {{ app.user.userIdentifier }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email"
+                       name="_username"
+                       class="form-control auth-input"
+                       value="{{ last_username }}"
+                       required autofocus>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Hasło</label>
+                <input type="password"
+                       name="_password"
+                       class="form-control auth-input"
+                       required>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-primary w-100 auth-btn">
+                Zaloguj się
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Nie masz konta?
+            <a href="{{ path('app_register') }}">Zarejestruj się</a>
+        </div>
+       <a href="{{ path('app_forgot_password_request') }}">
+	    Nie pamiętasz hasła?
+	</a>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Wysłano wiadomość resetowania hasła{% endblock %}
+
+{% block body %}
+    <h1>Sprawdź skrzynkę pocztową</h1>
+    <p>
+        Jeżeli konto z podanym adresem e-mail istnieje, wysłaliśmy wiadomość z linkiem do ustawienia nowego hasła.
+        Link wygaśnie za {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    </p>
+    <p>
+        Jeśli wiadomość nie dotarła, sprawdź folder spam albo
+        <a href="{{ path('app_forgot_password_request') }}">spróbuj ponownie</a>.
+    </p>
+{% endblock %}
